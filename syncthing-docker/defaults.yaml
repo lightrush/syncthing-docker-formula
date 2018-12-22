@@ -1,0 +1,18 @@
+syncthing-docker:
+  # Where's Docker?
+  docker_executable: /usr/bin/docker
+
+  # What Systemd services should syncthing-docker start after? See pillar.example.
+  systemd_after_deps: []
+
+  home: /var/syncthing
+
+  # Dirs available for sharing with Syncthing.
+  shared_dirs: []
+
+  # User and group Syncthing to run as.
+  user: nobody
+  group: nogroup
+
+  # Environment variables passed to container as-is.
+  environment_variables: {}

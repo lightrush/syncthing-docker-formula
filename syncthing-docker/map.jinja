@@ -1,0 +1,54 @@
+{# Import defaults, OS family map and OS map. #}
+{% import_yaml 'syncthing-docker/defaults.yaml' as defaults %}
+{% import_yaml 'syncthing-docker/osfamilymap.yaml' as osfamilymap %}
+{% import_yaml 'syncthing-docker/osmap.yaml' as osmap %}
+
+{# Start with defaults, merge osfamilymap, then merge osmap, then merge pillar #}
+{% set syncthing = salt['grains.filter_by'](
+  defaults,
+  merge = salt['grains.filter_by'](
+    osfamilymap,
+    grain='os_family',
+    merge = salt['grains.filter_by'](
+      osmap,
+      grain='os',
+      merge = salt['pillar.get']('syncthing-docker', {}),
+    ),
+  ),
+  base='syncthing-docker')
+%}
+
+{% set home = syncthing.home %}
+{% set data = None %}
+
+{% if grains["os"] == "Raspbian" -%}
+{% set container_repo = "funkyfuture/rpi-syncthing" %}
+{% set home = syncthing.home ~ "/config" %}
+{% set data = syncthing.home ~ "/data" %}
+{% set home_internal = "/syncthing/config" %}
+{% set data_internal = "/syncthing/data" %}
+{% set puid_var_name = "UID" %}
+{% set pgid_var_name = "GID" %}
+{% else %}
+{% set container_repo = "syncthing/syncthing" %}
+{% set home_internal = "/var/syncthing" %}
+{% set data_internal = None %}
+{% set puid_var_name = "PUID" %}
+{% set pgid_var_name = "PGID" %}
+{% endif -%}
+
+{# Resolve user and group as UID and GID #}
+{% do syncthing.update (
+    {
+      'puid_var_name': puid_var_name,
+      'pgid_var_name': pgid_var_name,
+      'container_repo': container_repo,
+      'home_internal': home_internal,
+      'data_internal': data_internal,
+      'home': home,
+      'data': data,
+      'puid': salt.cmd.run('id -u ' ~ syncthing.user),
+      'pgid': salt.cmd.shell('getent group ' ~ syncthing.group ~ ' | cut -d: -f3')
+    }
+  )
+%}

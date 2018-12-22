@@ -1,0 +1,26 @@
+syncthing-docker:
+  # What Systemd services should syncthing-docker start after?
+  systemd_after_deps:
+    - mount-remote-volume.service
+    - mount-some-disk.service
+    - network-internet.service
+
+  # User and group Syncthing to run as.
+  user: someuser
+  group: somegroup
+
+  # Directory for Syncthing to use for configuration and such.
+  home: /var/syncthing
+
+  # Dirs available for sharing with Syncthing. These need to be writeable by the
+  # user Syncthing is running as. If they don't exist, they'll be created by root.
+  shared_dirs:
+    - /media/some-disk
+    - /home/someuser/somedir
+
+  # Environment variables passed to container as-is. 
+  # If you specify a variable that is implicitly set by some of the pillar variables above,
+  # it will be overriden with the value specified here.
+  environment_variables:
+    SOME_VARIABLE: SOME_VALUE
+    ANOTHER_VARIABLE: ANOTHER_VALUE

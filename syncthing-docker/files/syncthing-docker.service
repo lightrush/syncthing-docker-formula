@@ -1,0 +1,32 @@
+{%- from "syncthing-docker/map.jinja" import syncthing with context -%}
+[Unit]
+Description=Syncthing Docker container
+After=docker.service {% for dep in syncthing.systemd_after_deps %}{{ dep }} {% endfor %}
+
+[Service]
+TimeoutStartSec=0
+ExecStartPre=-{{ syncthing.docker_executable }} kill syncthing
+ExecStartPre=-{{ syncthing.docker_executable }} rm -f syncthing
+ExecStartPre={{ syncthing.docker_executable }} pull {{ syncthing.container_repo }}
+ExecStart={{ syncthing.docker_executable }} run \
+        --name syncthing \
+        -v {{ syncthing.home }}:{{ syncthing.home_internal }} \
+        {% if syncthing.data -%}
+        -v {{ syncthing.data }}:{{ syncthing.data_internal }} \
+        {% endif -%}
+        --network=host \
+        -e "{{ syncthing.puid_var_name }}={{ syncthing.puid }}" \
+        -e "{{ syncthing.pgid_var_name }}={{ syncthing.pgid }}" \
+        {% for dir in syncthing.shared_dirs -%}
+        --mount type=bind,source={{ dir }},target={{ dir }} \
+        {% endfor -%}
+        {% for name, value in syncthing.environment_variables.items() -%}
+        -e "{{ name }}={{ value }}" \
+        {% endfor -%}
+        {{ syncthing.container_repo }}
+ExecStop={{ syncthing.docker_executable }} stop syncthing
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
