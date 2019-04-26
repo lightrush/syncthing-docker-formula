@@ -15,6 +15,7 @@ ExecStart={{ syncthing.docker_executable }} run \
         -v {{ syncthing.data }}:{{ syncthing.data_internal }} \
         {% endif -%}
         --network=host \
+        -e "GOGC={{ syncthing.gogc }}" \
         -e "{{ syncthing.puid_var_name }}={{ syncthing.puid }}" \
         -e "{{ syncthing.pgid_var_name }}={{ syncthing.pgid }}" \
         {% for dir in syncthing.shared_dirs -%}

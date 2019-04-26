@@ -3,3 +3,6 @@
 DEADBEEF:
   # Where's docker on DEADBEEF OS?
   docker_executable: /deadbeef/bin/docker
+
+Raspbian:
+  gogc: 25

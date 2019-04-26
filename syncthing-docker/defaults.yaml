@@ -2,6 +2,8 @@ syncthing-docker:
   # Where's Docker?
   docker_executable: /usr/bin/docker
 
+  gogc: 100
+
   # What Systemd services should syncthing-docker start after? See pillar.example.
   systemd_after_deps: []
 
