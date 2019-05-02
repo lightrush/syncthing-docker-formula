@@ -5,4 +5,4 @@ DEADBEEF:
   docker_executable: /deadbeef/bin/docker
 
 Raspbian:
-  gogc: 25
+  gogc: 50
