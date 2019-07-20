@@ -9,6 +9,8 @@ syncthing-docker:
 
   home: /var/syncthing
 
+  config_source:
+
   # Dirs available for sharing with Syncthing.
   shared_dirs: []
 

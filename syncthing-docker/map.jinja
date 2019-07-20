@@ -20,11 +20,13 @@
 
 {% set home = syncthing.home %}
 {% set data = None %}
+{% set config = syncthing.home ~ "/config" %}
 
 {% if grains["os"] == "Raspbian" -%}
 {% set container_repo = "funkyfuture/rpi-syncthing" %}
 {% set home = syncthing.home ~ "/config" %}
 {% set data = syncthing.home ~ "/data" %}
+{% set config = home %}
 {% set home_internal = "/syncthing/config" %}
 {% set data_internal = "/syncthing/data" %}
 {% set puid_var_name = "UID" %}
@@ -47,6 +49,7 @@
       'data_internal': data_internal,
       'home': home,
       'data': data,
+      'config': config,
       'puid': salt.cmd.run('id -u ' ~ syncthing.user),
       'pgid': salt.cmd.shell('getent group ' ~ syncthing.group ~ ' | cut -d: -f3')
     }
