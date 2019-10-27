@@ -20,3 +20,6 @@ syncthing-docker:
 
   # Environment variables passed to container as-is.
   environment_variables: {}
+
+  # Specify custom container image here if needed.
+  container_image:

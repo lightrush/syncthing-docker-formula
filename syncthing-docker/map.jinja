@@ -23,7 +23,7 @@
 {% set config = syncthing.home ~ "/config" %}
 
 {% if grains["os"] == "Raspbian" -%}
-{% set container_repo = "funkyfuture/rpi-syncthing" %}
+{% set container_image = "funkyfuture/rpi-syncthing" %}
 {% set home = syncthing.home ~ "/config" %}
 {% set data = syncthing.home ~ "/data" %}
 {% set config = home %}
@@ -32,11 +32,16 @@
 {% set puid_var_name = "UID" %}
 {% set pgid_var_name = "GID" %}
 {% else %}
-{% set container_repo = "syncthing/syncthing" %}
+{% set container_image = "syncthing/syncthing" %}
 {% set home_internal = "/var/syncthing" %}
 {% set data_internal = None %}
 {% set puid_var_name = "PUID" %}
 {% set pgid_var_name = "PGID" %}
+{% endif -%}
+
+{# If we specified container_image, override whatever we have with that #}
+{% if syncthing.container_image -%}
+{% set container_image = syncthing.container_image %}
 {% endif -%}
 
 {# Resolve user and group as UID and GID #}
@@ -44,7 +49,7 @@
     {
       'puid_var_name': puid_var_name,
       'pgid_var_name': pgid_var_name,
-      'container_repo': container_repo,
+      'container_image': container_image,
       'home_internal': home_internal,
       'data_internal': data_internal,
       'home': home,
