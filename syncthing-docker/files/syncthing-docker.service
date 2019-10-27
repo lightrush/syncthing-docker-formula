@@ -7,7 +7,7 @@ After=docker.service {% for dep in syncthing.systemd_after_deps %}{{ dep }} {% e
 TimeoutStartSec=0
 ExecStartPre=-{{ syncthing.docker_executable }} kill syncthing
 ExecStartPre=-{{ syncthing.docker_executable }} rm -f syncthing
-ExecStartPre={{ syncthing.docker_executable }} pull {{ syncthing.container_image }}
+ExecStartPre=-{{ syncthing.docker_executable }} pull {{ syncthing.container_image }}
 ExecStart={{ syncthing.docker_executable }} run \
         --name syncthing \
         -v {{ syncthing.home }}:{{ syncthing.home_internal }} \
