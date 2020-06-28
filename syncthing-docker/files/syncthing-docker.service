@@ -14,7 +14,9 @@ ExecStart={{ syncthing.docker_executable }} run \
         {% if syncthing.data -%}
         -v {{ syncthing.data }}:{{ syncthing.data_internal }} \
         {% endif -%}
-        --network=host \
+        -p 8384:8384 \
+        -p 22000:22000 \
+        -p 21027:21027/udp \
         -e "GOGC={{ syncthing.gogc }}" \
         -e "{{ syncthing.puid_var_name }}={{ syncthing.puid }}" \
         -e "{{ syncthing.pgid_var_name }}={{ syncthing.pgid }}" \

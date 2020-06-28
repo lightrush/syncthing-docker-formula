@@ -32,8 +32,8 @@
 {% set puid_var_name = "UID" %}
 {% set pgid_var_name = "GID" %}
 {% else %}
-{% set container_image = "syncthing/syncthing" %}
-{% set home_internal = "/var/syncthing" %}
+{% set container_image = "linuxserver/syncthing" %}
+{% set home_internal = "/config" %}
 {% set data_internal = None %}
 {% set puid_var_name = "PUID" %}
 {% set pgid_var_name = "PGID" %}
