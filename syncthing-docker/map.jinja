@@ -22,7 +22,7 @@
 {% set data = None %}
 {% set config = syncthing.home ~ "/config" %}
 
-{% if grains["os"] == "Raspbian" -%}
+{% if grains["os"] == "rem-Raspbian" -%}
 {% set container_image = "funkyfuture/rpi-syncthing" %}
 {% set home = syncthing.home ~ "/config" %}
 {% set data = syncthing.home ~ "/data" %}
