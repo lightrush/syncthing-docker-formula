@@ -7,9 +7,14 @@ syncthing_docker_service_installed_for_{{ syncthing.user }}:
     - template: jinja
 
   module.run:
-    - name: service.systemctl_reload
+    - service.systemctl_reload: []
     - onchanges:
       - file: syncthing_docker_service_installed_for_{{ syncthing.user }}
+
+  {# module.run:
+    - name: service.systemctl_reload
+    - onchanges:
+      - file: syncthing_docker_service_installed_for_{{ syncthing.user }} #}
 
 syncthing_docker_service_running_for_{{ syncthing.user }}:
   service.running:
