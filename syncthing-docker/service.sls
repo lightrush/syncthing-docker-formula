@@ -11,11 +11,6 @@ syncthing_docker_service_installed_for_{{ syncthing.user }}:
     - onchanges:
       - file: syncthing_docker_service_installed_for_{{ syncthing.user }}
 
-  {# module.run:
-    - name: service.systemctl_reload
-    - onchanges:
-      - file: syncthing_docker_service_installed_for_{{ syncthing.user }} #}
-
 syncthing_docker_service_running_for_{{ syncthing.user }}:
   service.running:
     - name: syncthing-docker-{{ syncthing.user }}
