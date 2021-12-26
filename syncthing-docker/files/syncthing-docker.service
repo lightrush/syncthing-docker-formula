@@ -1,23 +1,19 @@
-{%- from "syncthing-docker/map.jinja" import syncthing with context -%}
 [Unit]
 Description=Syncthing Docker container
 After=docker.service {% for dep in syncthing.systemd_after_deps %}{{ dep }} {% endfor %}
 
 [Service]
 TimeoutStartSec=0
-ExecStartPre=-{{ syncthing.docker_executable }} kill syncthing
-ExecStartPre=-{{ syncthing.docker_executable }} rm -f syncthing
+ExecStartPre=-{{ syncthing.docker_executable }} kill syncthing-{{ syncthing.user }}
+ExecStartPre=-{{ syncthing.docker_executable }} rm -f syncthing-{{ syncthing.user }}
 ExecStartPre=-{{ syncthing.docker_executable }} pull {{ syncthing.container_image }}
 ExecStart={{ syncthing.docker_executable }} run \
-        --name syncthing \
+        --name syncthing-{{ syncthing.user }} \
         -v {{ syncthing.home }}:{{ syncthing.home_internal }} \
-        {% if syncthing.data -%}
-        -v {{ syncthing.data }}:{{ syncthing.data_internal }} \
-        {% endif -%}
         --network=host \
         -e "GOGC={{ syncthing.gogc }}" \
-        -e "{{ syncthing.puid_var_name }}={{ syncthing.puid }}" \
-        -e "{{ syncthing.pgid_var_name }}={{ syncthing.pgid }}" \
+        -e "PUID={{ syncthing.puid }}" \
+        -e "PGID={{ syncthing.pgid }}" \
         {% for dir in syncthing.shared_dirs -%}
         --mount type=bind,source={{ dir }},target={{ dir }} \
         {% endfor -%}
@@ -25,7 +21,7 @@ ExecStart={{ syncthing.docker_executable }} run \
         -e "{{ name }}={{ value }}" \
         {% endfor -%}
         {{ syncthing.container_image }}
-ExecStop={{ syncthing.docker_executable }} stop syncthing
+ExecStop={{ syncthing.docker_executable }} stop syncthing-{{ syncthing.user }}
 Restart=always
 RestartSec=5
 

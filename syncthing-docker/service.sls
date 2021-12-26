@@ -1,19 +1,23 @@
 {%- from "syncthing-docker/map.jinja" import syncthing with context -%}
 
-syncthing_docker_service_installed_for_{{ syncthing.user }}:
+{% for instance_name, instance in syncthing.instances.items() %}
+syncthing_docker_service_installed_for_{{ instance.user }}:
   file.managed:
-    - name: /etc/systemd/system/syncthing-docker-{{ syncthing.user }}.service
+    - name: /etc/systemd/system/syncthing-docker-{{ instance.user }}.service
     - source: salt://syncthing-docker/files/syncthing-docker.service
     - template: jinja
+    - context:
+        syncthing: {{instance|tojson}}
 
   module.run:
-    - service.systemctl_reload: []
+    - name: service.systemctl_reload
     - onchanges:
-      - file: syncthing_docker_service_installed_for_{{ syncthing.user }}
+      - file: syncthing_docker_service_installed_for_{{ instance.user }}
 
-syncthing_docker_service_running_for_{{ syncthing.user }}:
+syncthing_docker_service_running_for_{{ instance.user }}:
   service.running:
-    - name: syncthing-docker-{{ syncthing.user }}
+    - name: syncthing-docker-{{ instance.user }}
     - enable: True
     - watch:
-      - module: syncthing_docker_service_installed_for_{{ syncthing.user }}
+      - module: syncthing_docker_service_installed_for_{{ instance.user }}
+{% endfor %}

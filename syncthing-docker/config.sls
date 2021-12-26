@@ -1,19 +1,21 @@
 {%- from "syncthing-docker/map.jinja" import syncthing with context -%}
 
-{% if syncthing.config_source %}
+{% for instance_name, instance in syncthing.instances.items() %}
+{% if instance.config_source %}
 
-syncthing_docker_config_dir_for_{{ syncthing.user }}:
+syncthing_docker_config_dir_for_{{ instance.user }}:
   file.directory:
-    - name: {{ syncthing.config }}
+    - name: {{ instance.config }}
     - makedirs: True
-    - user: {{ syncthing.user }}
-    - group: {{ syncthing.group }}
+    - user: {{ instance.user }}
+    - group: {{ instance.group }}
 
-syncthing_docker_copy_config_for_{{ syncthing.user }}:
+syncthing_docker_copy_config_for_{{ instance.user }}:
   file.recurse:
-    - name: {{ syncthing.config }}
-    - source: {{ syncthing.config_source }}
-    - user: {{ syncthing.user }}
-    - group: {{ syncthing.group }}
+    - name: {{ instance.config }}
+    - source: {{ instance.config_source }}
+    - user: {{ instance.user }}
+    - group: {{ instance.group }}
 
 {% endif %}
+{% endfor %}

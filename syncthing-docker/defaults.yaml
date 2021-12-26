@@ -1,25 +1,27 @@
 syncthing-docker:
-  # Where's Docker?
-  docker_executable: /usr/bin/docker
+  instances:
+    default:
+      # Where's Docker?
+      docker_executable: /usr/bin/docker
 
-  gogc: 100
+      gogc: 100
 
-  # What Systemd services should syncthing-docker start after? See pillar.example.
-  systemd_after_deps: []
+      # What Systemd services should syncthing-docker start after? See pillar.example.
+      systemd_after_deps: []
 
-  home: /var/syncthing
+      home: /var/syncthing
 
-  config_source:
+      config_source:
 
-  # Dirs available for sharing with Syncthing.
-  shared_dirs: []
+      # Dirs available for sharing with Syncthing.
+      shared_dirs: []
 
-  # User and group Syncthing to run as.
-  user: nobody
-  group: nogroup
+      # User and group Syncthing to run as.
+      user: nobody
+      group: nogroup
 
-  # Environment variables passed to container as-is.
-  environment_variables: {}
+      # Environment variables passed to container as-is.
+      environment_variables: {}
 
-  # Specify custom container image here if needed.
-  container_image:
+      # Specify custom container image here if needed.
+      container_image:

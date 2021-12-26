@@ -18,46 +18,29 @@
   base='syncthing-docker')
 %}
 
-{% set home = syncthing.home %}
-{% set data = None %}
-{% set config = syncthing.home ~ "/config" %}
+{% for instance_name, instance in syncthing.instances.items() %}
 
-{% if grains["os"] == "rem-Raspbian" -%}
-{% set container_image = "funkyfuture/rpi-syncthing" %}
-{% set home = syncthing.home ~ "/config" %}
-{% set data = syncthing.home ~ "/data" %}
-{% set config = home %}
-{% set home_internal = "/syncthing/config" %}
-{% set data_internal = "/syncthing/data" %}
-{% set puid_var_name = "UID" %}
-{% set pgid_var_name = "GID" %}
-{% else %}
+{% set config = instance.home ~ "/config" %}
 {% set container_image = "linuxserver/syncthing" %}
-{% set home = syncthing.home ~ "/config" %}
+{% set home = instance.home ~ "/config" %}
 {% set home_internal = "/config" %}
-{% set data_internal = None %}
-{% set puid_var_name = "PUID" %}
-{% set pgid_var_name = "PGID" %}
-{% endif -%}
 
 {# If we specified container_image, override whatever we have with that #}
-{% if syncthing.container_image -%}
-{% set container_image = syncthing.container_image %}
+{% if instance.container_image -%}
+{% set container_image = instance.container_image %}
 {% endif -%}
 
 {# Resolve user and group as UID and GID #}
-{% do syncthing.update (
+{% do instance.update (
     {
-      'puid_var_name': puid_var_name,
-      'pgid_var_name': pgid_var_name,
       'container_image': container_image,
       'home_internal': home_internal,
-      'data_internal': data_internal,
       'home': home,
-      'data': data,
       'config': config,
-      'puid': salt.cmd.run('id -u ' ~ syncthing.user),
-      'pgid': salt.cmd.shell('getent group ' ~ syncthing.group ~ ' | cut -d: -f3')
+      'puid': salt.cmd.run('id -u ' ~ instance.user),
+      'pgid': salt.cmd.shell('getent group ' ~ instance.group ~ ' | cut -d: -f3')
     }
   )
 %}
+
+{% endfor %}

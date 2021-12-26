@@ -1,8 +1,10 @@
 {%- from "syncthing-docker/map.jinja" import syncthing with context -%}
 
-syncthing_docker_home_dir_for_{{ syncthing.user }}:
+{% for instance_name, instance in syncthing.instances.items() %}
+syncthing_docker_home_dir_for_{{ instance.user }}:
   file.directory:
-    - name: {{ syncthing.home }}
+    - name: {{ instance.home }}
     - makedirs: True
-    - user: {{ syncthing.user }}
-    - group: {{ syncthing.group }}
+    - user: {{ instance.user }}
+    - group: {{ instance.group }}
+{% endfor %}
