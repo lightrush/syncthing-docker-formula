@@ -4,11 +4,11 @@ After=docker.service {% for dep in syncthing.systemd_after_deps %}{{ dep }} {% e
 
 [Service]
 TimeoutStartSec=0
-ExecStartPre=-{{ syncthing.docker_executable }} kill syncthing-{{ syncthing.user }}
-ExecStartPre=-{{ syncthing.docker_executable }} rm -f syncthing-{{ syncthing.user }}
+ExecStartPre=-{{ syncthing.docker_executable }} kill syncthing-{{ syncthing.name }}
+ExecStartPre=-{{ syncthing.docker_executable }} rm -f syncthing-{{ syncthing.name }}
 ExecStartPre=-{{ syncthing.docker_executable }} pull {{ syncthing.container_image }}
 ExecStart={{ syncthing.docker_executable }} run \
-        --name syncthing-{{ syncthing.user }} \
+        --name syncthing-{{ syncthing.name }} \
         -v {{ syncthing.home }}:{{ syncthing.home_internal }} \
         --network=host \
         -e "GOGC={{ syncthing.gogc }}" \
@@ -21,7 +21,7 @@ ExecStart={{ syncthing.docker_executable }} run \
         -e "{{ name }}={{ value }}" \
         {% endfor -%}
         {{ syncthing.container_image }}
-ExecStop={{ syncthing.docker_executable }} stop syncthing-{{ syncthing.user }}
+ExecStop={{ syncthing.docker_executable }} stop syncthing-{{ syncthing.name }}
 Restart=always
 RestartSec=5
 

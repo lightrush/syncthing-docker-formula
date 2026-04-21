@@ -20,10 +20,9 @@
 
 {% for instance_name, instance in syncthing.instances.items() %}
 
-{% set config = instance.home ~ "/config" %}
 {% set container_image = "linuxserver/syncthing" %}
-{% set home = instance.home ~ "/config" %}
-{% set home_internal = "/config" %}
+{% set home = instance.home %}
+{% set home_internal = instance.home_internal %}
 
 {# If we specified container_image, override whatever we have with that #}
 {% if instance.container_image -%}
@@ -36,7 +35,6 @@
       'container_image': container_image,
       'home_internal': home_internal,
       'home': home,
-      'config': config,
       'puid': salt.cmd.run('id -u ' ~ instance.user),
       'pgid': salt.cmd.shell('getent group ' ~ instance.group ~ ' | cut -d: -f3')
     }

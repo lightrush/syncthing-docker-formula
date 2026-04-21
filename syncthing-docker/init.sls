@@ -1,4 +1,3 @@
 include:
   - .dirs
-  - .config
   - .service

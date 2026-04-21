@@ -10,8 +10,7 @@ syncthing-docker:
       systemd_after_deps: []
 
       home: /var/syncthing
-
-      config_source:
+      home_internal: /config
 
       # Dirs available for sharing with Syncthing.
       shared_dirs: []
@@ -24,4 +23,4 @@ syncthing-docker:
       environment_variables: {}
 
       # Specify custom container image here if needed.
-      container_image:
+      container_image: ""
